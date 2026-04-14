@@ -22,6 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.room.Room
 import com.example.unscramble.data.MAX_NO_OF_WORDS
 import com.example.unscramble.data.SCORE_INCREASE
 import com.example.unscramble.data.SaveWord
@@ -32,12 +33,14 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-
+import android.app.Application // Tambahkan ini
+import androidx.lifecycle.AndroidViewModel // Tambahkan ini
+import com.example.unscramble.data.AppDatabase
 
 /**
  * ViewModel containing the app data and methods to process the data
  */
-class GameViewModel : ViewModel() {
+class GameViewModel(application: Application) : AndroidViewModel(application){
 
     // Game UI state
     private val _uiState = MutableStateFlow(GameUiState())
@@ -50,7 +53,9 @@ class GameViewModel : ViewModel() {
     private var usedWords: MutableSet<String> = mutableSetOf()
     private lateinit var currentWord: String
 
-    private val wordDao : WordDao = TODO()
+    private val database = com.example.unscramble.data.AppDatabase.getDatabase(application)
+    private val wordDao = database.wordDao()
+
     val historyState = wordDao.getAllSavedword().asLiveData()
 
     init {

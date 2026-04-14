@@ -125,10 +125,18 @@ fun GameScreen(gameViewModel: GameViewModel = viewModel()) {
         GameStatus(score = gameUiState.score, modifier = Modifier.padding(20.dp))
         val history by gameViewModel.historyState.observeAsState(listOf())
 
-        LazyColumn(modifier = Modifier.height(200.dp)) {
-            items(history){ data ->
-                Text(text = "Berhasil: $" +
-                        "{data.word}")
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp) // Berikan tinggi agar tidak memenuhi layar
+                .padding(vertical = 16.dp)
+        ) {
+            items(history) { data ->
+                Text(
+                    text = "Berhasil: ${data.word}",
+                    style = typography.bodyLarge,
+                    modifier = Modifier.padding(vertical = 4.dp)
+                )
             }
         }
 
