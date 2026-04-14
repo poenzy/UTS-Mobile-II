@@ -16,17 +16,24 @@
 
 package com.example.unscramble.ui
 
+import android.R
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
 import com.example.unscramble.data.MAX_NO_OF_WORDS
 import com.example.unscramble.data.SCORE_INCREASE
+import com.example.unscramble.data.SaveWord
 import com.example.unscramble.data.allWords
+import com.example.unscramble.data.WordDao
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+
 
 /**
  * ViewModel containing the app data and methods to process the data
@@ -44,6 +51,9 @@ class GameViewModel : ViewModel() {
     private var usedWords: MutableSet<String> = mutableSetOf()
     private lateinit var currentWord: String
 
+    private val wordDao : WordDao = TODO()
+    val historyState = wordDao.getAllSavedword().asLiveData()
+
     init {
         resetGame()
     }
@@ -59,6 +69,11 @@ class GameViewModel : ViewModel() {
     /*
      * Update the user's guess
      */
+    fun saveToDb(word: R.string){
+        viewModelScope.launch {
+            wordDao.insert(SaveWord(word = word))
+        }
+    }
     fun updateUserGuess(guessedWord: String){
         userGuess = guessedWord
     }
@@ -71,6 +86,7 @@ class GameViewModel : ViewModel() {
         if (userGuess.equals(currentWord, ignoreCase = true)) {
             // User's guess is correct, increase the score
             // and call updateGameState() to prepare the game for next round
+            saveToDb(userGuess)
             val updatedScore = _uiState.value.score.plus(SCORE_INCREASE)
             updateGameState(updatedScore)
         } else {
