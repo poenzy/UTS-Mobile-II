@@ -16,7 +16,6 @@
 
 package com.example.unscramble.ui
 
-import android.R
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -69,7 +68,7 @@ class GameViewModel : ViewModel() {
     /*
      * Update the user's guess
      */
-    fun saveToDb(word: R.string){
+    fun saveToDb(word: String){
         viewModelScope.launch {
             wordDao.insert(SaveWord(word = word))
         }

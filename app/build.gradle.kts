@@ -65,6 +65,7 @@ android {
 
 dependencies {
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.10.0")
+    implementation("androidx.compose.runtime:runtime-livedata:1.10.6")
     val room_version = "2.8.4"
     implementation("androidx.room:room-runtime:${room_version}")
     implementation(platform("androidx.compose:compose-bom:2024.12.01"))
